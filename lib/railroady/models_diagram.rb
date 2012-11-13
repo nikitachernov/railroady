@@ -42,7 +42,7 @@ class ModelsDiagram < AppDiagram
     generated =
       if defined?(CouchRest::Model::Base) && current_class.new.is_a?(CouchRest::Model::Base)
         process_couchrest_model(current_class)
-      elsif defined?(Mongoid::Document) && current_class.new.is_a?(Mongoid::Document)
+      elsif defined?(Mongoid::Document) && current_class.send(:new).is_a?(Mongoid::Document)
         process_mongoid_model(current_class)
       elsif defined?(DataMapper::Resource) && current_class.new.is_a?(DataMapper::Resource)
         process_datamapper_model(current_class)
