@@ -258,7 +258,8 @@ class ModelsDiagram < AppDiagram
     return if %w[belongs_to referenced_in].include?(macro) && !@options.show_belongs_to
 
     # Skip "through" associations
-    through = assoc.options.include?(:through)
+    assoc_options = assoc.respond_to?(:options) ? assoc.options : assoc[1]
+    through = assoc_options.try(:include?, :through)
     return if through && @options.hide_through
 
     #TODO:
@@ -285,7 +286,7 @@ class ModelsDiagram < AppDiagram
 
     if %w[has_one references_one embeds_one].include?(macro)
       assoc_type = 'one-one'
-    elsif macro == 'has_many' && (!assoc.options[:through]) ||
+    elsif macro == 'has_many' && (!assoc_options.try(:[], :through)) ||
           %w[references_many embeds_many].include?(macro)
       assoc_type = 'one-many'
     else # habtm or has_many, :through
